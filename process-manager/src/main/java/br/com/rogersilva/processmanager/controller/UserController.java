@@ -2,9 +2,12 @@ package br.com.rogersilva.processmanager.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import br.com.rogersilva.processmanager.exception.NotFoundException;
 import br.com.rogersilva.processmanager.service.UserService;
 
 @RestController
+@Validated
 @RequestMapping("/user")
 public class UserController {
 
@@ -32,12 +36,12 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userDto));
     }
 
     @PutMapping("/{user_id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("user_id") Long userId, @RequestBody UserDto userDto)
+    public ResponseEntity<UserDto> updateUser(@PathVariable("user_id") Long userId, @Valid @RequestBody UserDto userDto)
             throws NotFoundException {
         return ResponseEntity.ok().body(userService.updateUser(userId, userDto));
     }
