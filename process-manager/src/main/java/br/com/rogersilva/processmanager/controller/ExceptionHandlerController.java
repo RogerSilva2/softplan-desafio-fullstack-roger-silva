@@ -16,12 +16,20 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import br.com.rogersilva.processmanager.dto.ErrorDto;
 import br.com.rogersilva.processmanager.dto.ValidationErrorDto;
+import br.com.rogersilva.processmanager.exception.BadRequestException;
 import br.com.rogersilva.processmanager.exception.NotFoundException;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerController.class);
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorDto> badRequest(BadRequestException e) {
+        LOGGER.error(e.getMessage(), e);
+        return ResponseEntity.badRequest()
+                .body(ErrorDto.builder().error("bad_request").errorDescription(e.getMessage()).build());
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorDto> badRequest(HttpMessageNotReadableException e) {
