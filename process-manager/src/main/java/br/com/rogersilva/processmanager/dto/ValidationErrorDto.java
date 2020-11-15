@@ -1,7 +1,5 @@
 package br.com.rogersilva.processmanager.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,13 +15,15 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @Builder
-public class ErrorDto extends Dto {
+public class ValidationErrorDto extends Dto {
 
-    private static final long serialVersionUID = -7746326891794675775L;
+    private static final long serialVersionUID = 5959755884711380643L;
 
-    private String error;
+    private String object;
 
-    private String errorDescription;
+    private String field;
 
-    private List<ValidationErrorDto> validationErrors;
+    private transient Object rejectedValue;
+
+    private String message;
 }

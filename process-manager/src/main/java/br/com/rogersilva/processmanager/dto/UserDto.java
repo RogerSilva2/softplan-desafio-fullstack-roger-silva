@@ -1,5 +1,8 @@
 package br.com.rogersilva.processmanager.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -26,10 +29,13 @@ public class UserDto extends Dto {
     @JsonProperty(access = Access.READ_ONLY)
     private Long id;
 
+    @NotBlank(message = "Name cannot be blank")
     private String name;
 
+    @NotBlank(message = "Password cannot be blank")
     @JsonProperty(access = Access.READ_WRITE)
     private String password;
 
+    @NotNull(message = "Role cannot be null")
     private Role role;
 }
