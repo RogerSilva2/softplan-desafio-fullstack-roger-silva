@@ -1,13 +1,11 @@
 package br.com.rogersilva.processmanager.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -24,25 +22,15 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @ToString
 @Builder
-public class Evaluation extends Bean {
+public class Evaluation implements Serializable {
 
     private static final long serialVersionUID = 6398621932168382532L;
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id", updatable = false, nullable = false)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_usuario_avaliador", referencedColumnName = "id", nullable = false)
-    private User evaluator;
-
-    @ManyToOne
-    @JoinColumn(name = "id_processo", referencedColumnName = "id", nullable = false)
-    private Process process;
+    @EmbeddedId
+    private EvaluationId id;
 
     @Column(name = "comentario")
     private String feedback;

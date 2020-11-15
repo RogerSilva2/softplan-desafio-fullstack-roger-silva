@@ -1,0 +1,66 @@
+package br.com.rogersilva.processmanager.service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.rogersilva.processmanager.dto.UserDto;
+import br.com.rogersilva.processmanager.exception.NotFoundException;
+import br.com.rogersilva.processmanager.model.User;
+import br.com.rogersilva.processmanager.repository.UserRepository;
+
+@Service
+@Transactional
+public class UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<UserDto> findUsers() {
+        return userRepository.findAll().stream().map(this::convertToUserDto).collect(Collectors.toList());
+    }
+
+    public UserDto createUser(UserDto userDto) {
+        LocalDateTime now = LocalDateTime.now();
+
+        User user = convertToUser(userDto);
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
+
+        return convertToUserDto(userRepository.save(user));
+    }
+
+    public UserDto updateUser(Long userId, UserDto userDto) throws NotFoundException {
+        User user = findById(userId);
+
+        user.setName(userDto.getName());
+        user.setPassword(userDto.getPassword());
+        user.setRole(userDto.getRole());
+        user.setUpdatedAt(LocalDateTime.now());
+
+        return convertToUserDto(userRepository.save(user));
+    }
+
+    public void deleteUser(Long userId) throws NotFoundException {
+        User user = findById(userId);
+
+        userRepository.delete(user);
+    }
+
+    private User findById(Long userId) throws NotFoundException {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User with id %s not found", userId)));
+    }
+
+    private User convertToUser(UserDto userDto) {
+        return User.builder().name(userDto.getName()).password(userDto.getPassword()).role(userDto.getRole()).build();
+    }
+
+    private UserDto convertToUserDto(User user) {
+        return UserDto.builder().id(user.getId()).name(user.getName()).role(user.getRole()).build();
+    }
+}

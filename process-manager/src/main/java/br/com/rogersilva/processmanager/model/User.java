@@ -1,5 +1,6 @@
 package br.com.rogersilva.processmanager.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -22,10 +23,10 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @ToString
 @Builder
-public class User extends Bean {
+public class User implements Serializable {
 
     private static final long serialVersionUID = -1470898176580467827L;
 
