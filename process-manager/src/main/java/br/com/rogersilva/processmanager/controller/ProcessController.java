@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.rogersilva.processmanager.dto.ProcessDto;
+import br.com.rogersilva.processmanager.exception.BadRequestException;
 import br.com.rogersilva.processmanager.service.ProcessService;
 
 @RestController
@@ -31,7 +32,8 @@ public class ProcessController {
     }
 
     @PostMapping
-    public ResponseEntity<ProcessDto> createProcess(@Valid @RequestBody ProcessDto processDto) {
+    public ResponseEntity<ProcessDto> createProcess(@Valid @RequestBody ProcessDto processDto)
+            throws BadRequestException {
         return ResponseEntity.status(HttpStatus.CREATED).body(processService.createProcess(processDto));
     }
 }

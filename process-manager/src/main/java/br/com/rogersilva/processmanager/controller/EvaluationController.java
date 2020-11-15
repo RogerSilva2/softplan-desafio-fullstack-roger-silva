@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.rogersilva.processmanager.dto.EvaluationDto;
 import br.com.rogersilva.processmanager.exception.BadRequestException;
+import br.com.rogersilva.processmanager.exception.NotFoundException;
 import br.com.rogersilva.processmanager.service.EvaluationService;
 
 @RestController
@@ -25,7 +26,7 @@ public class EvaluationController {
 
     @PostMapping
     public ResponseEntity<EvaluationDto> createEvaluation(@Valid @RequestBody EvaluationDto evaluationDto)
-            throws BadRequestException {
+            throws BadRequestException, NotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED).body(evaluationService.createEvaluation(evaluationDto));
     }
 }

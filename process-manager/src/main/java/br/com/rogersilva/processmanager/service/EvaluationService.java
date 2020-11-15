@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.rogersilva.processmanager.dto.EvaluationDto;
 import br.com.rogersilva.processmanager.exception.BadRequestException;
+import br.com.rogersilva.processmanager.exception.NotFoundException;
 import br.com.rogersilva.processmanager.model.Evaluation;
 import br.com.rogersilva.processmanager.model.EvaluationId;
 import br.com.rogersilva.processmanager.model.Process;
@@ -29,7 +30,7 @@ public class EvaluationService {
     @Autowired
     private ProcessRepository processRepository;
 
-    public EvaluationDto createEvaluation(EvaluationDto evaluationDto) throws BadRequestException {
+    public EvaluationDto createEvaluation(EvaluationDto evaluationDto) throws BadRequestException, NotFoundException {
         User user = userRepository.findById(evaluationDto.getEvaluatorId()).orElseThrow(() -> new BadRequestException(
                 String.format("User with id %s not found", evaluationDto.getEvaluatorId())));
 
@@ -37,18 +38,16 @@ public class EvaluationService {
                 .orElseThrow(() -> new BadRequestException(
                         String.format("Process with id %s not found", evaluationDto.getProcessId())));
 
-        LocalDateTime now = LocalDateTime.now();
+        Evaluation evaluation = evaluationRepository
+                .findById(EvaluationId.builder().evaluator(user).process(process).build())
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("Evaluation for user with id %s and process with id %s not found",
+                                evaluationDto.getEvaluatorId(), evaluationDto.getProcessId())));
 
-        Evaluation evaluation = convertToEvaluation(evaluationDto, user, process);
-        evaluation.setCreatedAt(now);
-        evaluation.setUpdatedAt(now);
+        evaluation.setFeedback(evaluationDto.getFeedback());
+        evaluation.setUpdatedAt(LocalDateTime.now());
 
         return convertToEvaluationDto(evaluationRepository.save(evaluation));
-    }
-
-    private Evaluation convertToEvaluation(EvaluationDto evaluationDto, User user, Process process) {
-        return Evaluation.builder().id(EvaluationId.builder().evaluator(user).process(process).build())
-                .feedback(evaluationDto.getFeedback()).build();
     }
 
     private EvaluationDto convertToEvaluationDto(Evaluation evaluation) {
