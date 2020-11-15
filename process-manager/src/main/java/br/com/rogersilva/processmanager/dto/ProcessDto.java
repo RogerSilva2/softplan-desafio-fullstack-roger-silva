@@ -1,6 +1,9 @@
 package br.com.rogersilva.processmanager.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -32,4 +35,8 @@ public class ProcessDto extends Dto {
 
     @NotBlank(message = "Content cannot be blank")
     private String content;
+
+    @NotEmpty(message = "Evaluator ids cannot be empty")
+    @JsonProperty(access = Access.READ_WRITE)
+    private List<Long> evaluatorIds;
 }
