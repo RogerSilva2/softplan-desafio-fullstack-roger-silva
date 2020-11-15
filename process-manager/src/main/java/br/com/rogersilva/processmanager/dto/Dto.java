@@ -1,4 +1,4 @@
-package br.com.rogersilva.processmanager.model;
+package br.com.rogersilva.processmanager.dto;
 
 import java.io.Serializable;
 
@@ -9,6 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonInclude(Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public abstract class Bean implements Serializable {
+public abstract class Dto implements Serializable {
     private static final long serialVersionUID = 8300382540495099058L;
 }

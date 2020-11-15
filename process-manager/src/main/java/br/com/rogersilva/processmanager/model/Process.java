@@ -1,7 +1,7 @@
 package br.com.rogersilva.processmanager.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -26,10 +25,10 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @ToString
 @Builder
-public class Process extends Bean {
+public class Process implements Serializable {
 
     private static final long serialVersionUID = -7869934203526386159L;
 
@@ -47,9 +46,6 @@ public class Process extends Bean {
     @ManyToOne
     @JoinColumn(name = "id_usuario_criador", referencedColumnName = "id", nullable = false)
     private User creator;
-
-    @OneToMany(mappedBy = "evaluator")
-    private List<User> evaluators;
 
     @Column(name = "criado_em", nullable = false)
     private LocalDateTime createdAt;
