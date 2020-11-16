@@ -13,6 +13,7 @@ import br.com.rogersilva.processmanager.exception.BadRequestException;
 import br.com.rogersilva.processmanager.model.Evaluation;
 import br.com.rogersilva.processmanager.model.EvaluationId;
 import br.com.rogersilva.processmanager.model.Process;
+import br.com.rogersilva.processmanager.model.Role;
 import br.com.rogersilva.processmanager.model.User;
 import br.com.rogersilva.processmanager.repository.EvaluationRepository;
 import br.com.rogersilva.processmanager.repository.ProcessRepository;
@@ -31,27 +32,39 @@ public class ProcessService {
     @Autowired
     private EvaluationRepository evaluationRepository;
 
-    public List<ProcessDto> findProcesses() {
-        return processRepository.findAll().stream().map(this::convertToProcessDto).collect(Collectors.toList());
+    public List<ProcessDto> findProcesses(User user) {
+        switch (user.getRole()) {
+        case GRADER:
+            return processRepository.findAll().stream().map(this::convertToProcessDto).collect(Collectors.toList());
+        case EVALUATOR:
+            return evaluationRepository.findByIdEvaluatorId(user.getId()).orElseGet(List::of).stream()
+                    .map(e -> e.getId().getProcess()).map(this::convertToProcessDto).collect(Collectors.toList());
+        default:
+            return List.of();
+        }
     }
 
-    public ProcessDto createProcess(ProcessDto processDto) throws BadRequestException {
+    public ProcessDto createProcess(ProcessDto processDto, User creator) throws BadRequestException {
         LocalDateTime now = LocalDateTime.now();
 
         Process process = convertToProcess(processDto);
-        // TODO: pegar usuário da sessão quando tiver autenticação
-        process.setCreator(User.builder().id(1L).build());
+
+        process.setCreator(creator);
         process.setCreatedAt(now);
         process.setUpdatedAt(now);
 
         process = processRepository.save(process);
         for (Long evaluatorId : processDto.getEvaluatorIds()) {
-            User user = userRepository.findById(evaluatorId).orElseThrow(
+            User evaluator = userRepository.findById(evaluatorId).orElseThrow(
                     () -> new BadRequestException(String.format("User with id %s not found", evaluatorId)));
 
+            if (!evaluator.getRole().equals(Role.EVALUATOR)) {
+                throw new BadRequestException(String.format("User with id %s not is evaluator", evaluatorId));
+            }
+
             Evaluation evaluation = Evaluation.builder()
-                    .id(EvaluationId.builder().evaluator(user).process(process).build()).createdAt(now).updatedAt(now)
-                    .build();
+                    .id(EvaluationId.builder().evaluator(evaluator).process(process).build()).createdAt(now)
+                    .updatedAt(now).build();
 
             evaluationRepository.save(evaluation);
         }
