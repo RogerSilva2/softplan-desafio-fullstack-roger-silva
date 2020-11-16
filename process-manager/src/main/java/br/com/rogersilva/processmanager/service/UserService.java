@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +19,16 @@ import br.com.rogersilva.processmanager.repository.UserRepository;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+    }
 
     public List<UserDto> findUsers() {
         return userRepository.findAll().stream().map(this::convertToUserDto).collect(Collectors.toList());
@@ -37,8 +47,8 @@ public class UserService {
     public UserDto updateUser(Long userId, UserDto userDto) throws NotFoundException {
         User user = findById(userId);
 
-        user.setName(userDto.getName());
-        user.setPassword(userDto.getPassword());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
         user.setRole(userDto.getRole());
         user.setUpdatedAt(LocalDateTime.now());
 
@@ -57,10 +67,11 @@ public class UserService {
     }
 
     private User convertToUser(UserDto userDto) {
-        return User.builder().name(userDto.getName()).password(userDto.getPassword()).role(userDto.getRole()).build();
+        return User.builder().username(userDto.getUsername())
+                .password(new BCryptPasswordEncoder().encode(userDto.getPassword())).role(userDto.getRole()).build();
     }
 
     private UserDto convertToUserDto(User user) {
-        return UserDto.builder().id(user.getId()).name(user.getName()).role(user.getRole()).build();
+        return UserDto.builder().id(user.getId()).username(user.getUsername()).role(user.getRole()).build();
     }
 }
