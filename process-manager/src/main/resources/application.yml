@@ -14,3 +14,15 @@ spring:
 jwt:
   secret: 65a4de4bd62a7c1e9c4373336b0fb8dc
   expiration: 180000
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+info:
+  app:
+    name: "@project.name@"
+    version: "@project.version@"
