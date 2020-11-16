@@ -33,6 +33,6 @@ public class AuthController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
                 loginDto.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
-        return ResponseEntity.ok().body(authService.createToken(authentication));
+        return ResponseEntity.ok().body(authService.createAccessToken(authentication));
     }
 }

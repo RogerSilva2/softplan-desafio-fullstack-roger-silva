@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
     }
 
-    private User findById(Long userId) throws NotFoundException {
+    public User findById(Long userId) throws NotFoundException {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id %s not found", userId)));
     }
