@@ -9,8 +9,9 @@ spring:
       connectionTimeout: 20000
       maximumPoolSize: 5
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 jwt:
   secret: 65a4de4bd62a7c1e9c4373336b0fb8dc
   expiration: 180000

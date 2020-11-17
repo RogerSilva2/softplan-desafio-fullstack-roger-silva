@@ -17,7 +17,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "avaliacao")
+@Table(name = "table_evaluation")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -32,12 +32,12 @@ public class Evaluation implements Serializable {
     @EmbeddedId
     private EvaluationId id;
 
-    @Column(name = "comentario")
+    @Column(name = "feedback")
     private String feedback;
 
-    @Column(name = "criado_em", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "atualizado_em", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }

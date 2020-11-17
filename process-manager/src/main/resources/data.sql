@@ -1,0 +1,1 @@
+INSERT INTO table_user(username, password, role, created_at, updated_at) VALUES('roger', '$2a$10$.cpk5T7bzw0qL3ZiHte9t.h01iVfseMwHxn/v.S4PY2GfUmrU3lv6', 'ADMINISTRATOR', now(), now());
