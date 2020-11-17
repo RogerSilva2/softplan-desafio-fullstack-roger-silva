@@ -27,10 +27,10 @@ public class EvaluationId implements Serializable {
     private static final long serialVersionUID = -1213330801975560499L;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario_avaliador", referencedColumnName = "id", updatable = false, nullable = false)
+    @JoinColumn(name = "id_evaluator", referencedColumnName = "id", updatable = false, nullable = false)
     private User evaluator;
 
     @ManyToOne
-    @JoinColumn(name = "id_processo", referencedColumnName = "id", updatable = false, nullable = false)
+    @JoinColumn(name = "id_process", referencedColumnName = "id", updatable = false, nullable = false)
     private Process process;
 }

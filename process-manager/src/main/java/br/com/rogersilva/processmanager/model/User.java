@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +27,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "table_user")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -42,19 +44,20 @@ public class User implements Serializable, UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "nome", nullable = false, length = 50)
+    @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Column(name = "senha", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "funcao", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
     private Role role;
 
-    @Column(name = "criado_em", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "atualizado_em", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Override

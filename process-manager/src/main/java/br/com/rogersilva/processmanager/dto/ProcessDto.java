@@ -2,6 +2,7 @@ package br.com.rogersilva.processmanager.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
@@ -30,6 +31,7 @@ public class ProcessDto extends Dto {
     @JsonProperty(access = Access.READ_ONLY)
     private Long id;
 
+    @Max(value = 50, message = "Name must be less than or equal to 50")
     @NotBlank(message = "Name cannot be blank")
     private String name;
 

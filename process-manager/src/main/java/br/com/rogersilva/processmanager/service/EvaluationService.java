@@ -15,7 +15,6 @@ import br.com.rogersilva.processmanager.model.Process;
 import br.com.rogersilva.processmanager.model.User;
 import br.com.rogersilva.processmanager.repository.EvaluationRepository;
 import br.com.rogersilva.processmanager.repository.ProcessRepository;
-import br.com.rogersilva.processmanager.repository.UserRepository;
 
 @Service
 @Transactional
@@ -25,15 +24,10 @@ public class EvaluationService {
     private EvaluationRepository evaluationRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ProcessRepository processRepository;
 
-    public EvaluationDto createEvaluation(EvaluationDto evaluationDto) throws BadRequestException, NotFoundException {
-        User user = userRepository.findById(evaluationDto.getEvaluatorId()).orElseThrow(() -> new BadRequestException(
-                String.format("User with id %s not found", evaluationDto.getEvaluatorId())));
-
+    public EvaluationDto createEvaluation(EvaluationDto evaluationDto, User user)
+            throws BadRequestException, NotFoundException {
         Process process = processRepository.findById(evaluationDto.getProcessId())
                 .orElseThrow(() -> new BadRequestException(
                         String.format("Process with id %s not found", evaluationDto.getProcessId())));
@@ -41,8 +35,8 @@ public class EvaluationService {
         Evaluation evaluation = evaluationRepository
                 .findById(EvaluationId.builder().evaluator(user).process(process).build())
                 .orElseThrow(() -> new NotFoundException(
-                        String.format("Evaluation for user with id %s and process with id %s not found",
-                                evaluationDto.getEvaluatorId(), evaluationDto.getProcessId())));
+                        String.format("Evaluation for user with id %s and process with id %s not found", user.getId(),
+                                evaluationDto.getProcessId())));
 
         evaluation.setFeedback(evaluationDto.getFeedback());
         evaluation.setUpdatedAt(LocalDateTime.now());

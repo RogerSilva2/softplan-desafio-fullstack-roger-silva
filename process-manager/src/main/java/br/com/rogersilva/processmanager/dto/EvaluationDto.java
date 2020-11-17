@@ -25,10 +25,6 @@ public class EvaluationDto extends Dto {
 
     private static final long serialVersionUID = -2841048000812434490L;
 
-    @NotNull(message = "Evaluator id cannot be null")
-    @JsonProperty(access = Access.READ_WRITE)
-    private Long evaluatorId;
-
     @NotNull(message = "Process id cannot be null")
     @JsonProperty(access = Access.READ_WRITE)
     private Long processId;

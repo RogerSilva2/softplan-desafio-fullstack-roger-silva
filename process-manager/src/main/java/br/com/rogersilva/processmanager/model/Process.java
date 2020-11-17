@@ -21,7 +21,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "processo")
+@Table(name = "table_process")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -38,19 +38,19 @@ public class Process implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "nome", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "conteudo", nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario_criador", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_creator", referencedColumnName = "id", nullable = false)
     private User creator;
 
-    @Column(name = "criado_em", nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "atualizado_em", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }
