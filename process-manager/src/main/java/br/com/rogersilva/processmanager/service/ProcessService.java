@@ -54,6 +54,7 @@ public class ProcessService {
         process.setUpdatedAt(now);
 
         process = processRepository.save(process);
+
         for (Long evaluatorId : processDto.getEvaluatorIds()) {
             User evaluator = userRepository.findById(evaluatorId).orElseThrow(
                     () -> new BadRequestException(String.format("User with id %s not found", evaluatorId)));
